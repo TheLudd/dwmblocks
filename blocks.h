@@ -1,6 +1,7 @@
 //Modify this file to change what commands output to your statusbar, and recompile using the make command.
 static const Block blocks[] = {
-	/*Icon*/	/*Command*/		/*Update Interval*/	/*Update Signal*/
+	/*Icon*/	/*Command*/		/*Update Interval*/	/*Update Signal*/	/*Center (optional)*/
+	{"", "claude-usage", 300, 8, 1},
 	{"", "dictation-status", 0, 7},
 	{"", "check-dotfiles-repo" , 60 * 60, 4},
 	{"", "count-pacman-upgrades" , 0, 3},

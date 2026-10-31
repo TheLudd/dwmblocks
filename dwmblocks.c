@@ -16,13 +16,15 @@
 #define LENGTH(X)               (sizeof(X) / sizeof (X[0]))
 #define CMDLENGTH		50
 #define MIN( a, b ) ( ( a < b) ? a : b )
-#define STATUSLENGTH (LENGTH(blocks) * CMDLENGTH + 1)
+#define STATUSLENGTH (LENGTH(blocks) * CMDLENGTH + 2)
+#define CENTERSEP		'\x1f' /* dwm draws the text before this byte in the middle of the bar */
 
 typedef struct {
 	char* icon;
 	char* command;
 	unsigned int interval;
 	unsigned int signal;
+	int center;
 } Block;
 #ifndef __OpenBSD__
 void dummysighandler(int num);
@@ -32,6 +34,7 @@ void getcmds(int time);
 void getsigcmds(unsigned int signal);
 void setupsignals();
 void sighandler(int signum);
+void appendgroup(char *str, int center);
 int getstatus(char *str, char *last);
 void statusloop();
 void termhandler(int signum);
@@ -115,13 +118,29 @@ void setupsignals()
 
 }
 
+//appends the outputs of the center or the right blocks, without the trailing delimiter
+void appendgroup(char *str, int center)
+{
+	size_t start = strlen(str);
+	for (unsigned int i = 0; i < LENGTH(blocks); i++)
+		if (!blocks[i].center == !center)
+			strcat(str, statusbar[i]);
+	size_t len = strlen(str);
+	if (len - start >= strlen(delim))
+		str[len - strlen(delim)] = '\0';
+}
+
 int getstatus(char *str, char *last)
 {
 	strcpy(last, str);
 	str[0] = '\0';
-	for (unsigned int i = 0; i < LENGTH(blocks); i++)
-		strcat(str, statusbar[i]);
-	str[strlen(str)-strlen(delim)] = '\0';
+	appendgroup(str, 1);
+	if (str[0] != '\0') {
+		size_t len = strlen(str);
+		str[len] = CENTERSEP;
+		str[len + 1] = '\0';
+	}
+	appendgroup(str, 0);
 	return strcmp(str, last);//0 if they are the same
 }
 
