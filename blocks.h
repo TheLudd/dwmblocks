@@ -3,7 +3,7 @@ static const Block blocks[] = {
 	/*Icon*/	/*Command*/		/*Update Interval*/	/*Update Signal*/	/*Center (optional)*/
 	{"", "claude-usage", 300, 8, 1},
 	{"", "dictation-status", 0, 7},
-	{"", "check-dotfiles-repo" , 60 * 60, 4},
+	{"", "repo-status" , 60 * 60, 4},
 	{"", "count-pacman-upgrades" , 0, 3},
 	{"", "display-sound" , 3500, 6},
 	{"", "battery" , 60, 1},
