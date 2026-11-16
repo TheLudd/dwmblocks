@@ -217,7 +217,8 @@ int main(int argc, char** argv)
 			writestatus = pstdout;
 	}
 #ifndef NO_X
-	if (!setupX())
+	/* -p prints the status to stdout, e.g. for dwl's bar, without X */
+	if (writestatus == setroot && !setupX())
 		return 1;
 #endif
 	delimLen = MIN(delimLen, strlen(delim));
@@ -226,7 +227,8 @@ int main(int argc, char** argv)
 	signal(SIGINT, termhandler);
 	statusloop();
 #ifndef NO_X
-	XCloseDisplay(dpy);
+	if (dpy)
+		XCloseDisplay(dpy);
 #endif
 	return 0;
 }
